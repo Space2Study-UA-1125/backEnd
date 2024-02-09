@@ -32,7 +32,7 @@ const cooperationService = {
     const { role: currentUserRole } = currentUser
     const { price, status } = updateData
 
-    if (price && status) throw createForbiddenError()
+    if (price !== undefined && status) throw createForbiddenError()
 
     const cooperation = await Cooperation.findById(id)
 
