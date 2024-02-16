@@ -1,3 +1,4 @@
+
 # Space2Study-BackEnd-mvp
 <a href="https://softserve.academy/"><img src="https://github.com/ita-social-projects/Space2Study-BackEnd-mvp/blob/main/photo.jpg" title="SoftServe IT Academy" alt="SoftServe IT Academy"></a>
 
@@ -315,3 +316,8 @@ Only the release should merge into the main branch!!!
 [MIT](https://choosealicense.com/licenses/mit/)
 
 [![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](http://badges.mit-license.org)
+=======
+# SpaceToStudy-BackEnd
+
+[![Build Status](https://dev.azure.com/ProjectApproach/Space2Study/_apis/build/status/ita-social-projects.SpaceToStudy-BackEnd?branchName=develop)](https://dev.azure.com/ProjectApproach/Space2Study/_build/latest?definitionId=32&branchName=develop)
+>>>>>>> 8f622eb9e531af4a1da0e5c7ca8826d69a0ead67
