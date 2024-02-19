@@ -8,15 +8,13 @@ const categorySchema = new Schema(
       unique: true,
       required: [true, 'Category name is required']
     },
-    appearance: {
-      icon: {
+    categoryIcon: {
+      path: {
         type: String,
-        default: 'mocked-path-to-icon',
         required: [true, 'Category icon path is required']
       },
       color: {
         type: String,
-        default: '#66C42C',
         required: [true, 'Color value is required']
       }
     },
