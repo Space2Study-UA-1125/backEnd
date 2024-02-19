@@ -5,16 +5,19 @@ const categorySchema = new Schema(
   {
     name: {
       type: String,
-      unique: true
+      unique: true,
+      required: [true, 'Category name is required']
     },
     appearance: {
       icon: {
         type: String,
-        default: 'mocked-path-to-icon'
+        default: 'mocked-path-to-icon',
+        required: [true, 'Category icon path is required']
       },
       color: {
         type: String,
-        default: '#66C42C'
+        default: '#66C42C',
+        required: [true, 'Color value is required']
       }
     },
     totalOffers: {
