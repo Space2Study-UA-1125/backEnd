@@ -3,15 +3,19 @@ const Comment = require('~/models/comment')
 const errors = require('~/consts/errors')
 
 
-const handleError = (error, res) => {
+const getErrorResponse = (error) => {
+  let errorResponse = { ...errors.INTERNAL_SERVER_ERROR, details: error.message }
+  let statusCode = 403
+
   if (error.name === 'ValidationError') {
-    res.status(403).json({ ...errors.VALIDATION_ERROR, details: error.message })
+    errorResponse = { ...errors.VALIDATION_ERROR, details: error.message }
   } else if (error.name === 'MongoServerError') {
-    res.status(403).json({ ...errors.MONGO_SERVER_ERROR, details: error.message })
-  } else {
-    res.status(403).json({ ...errors.INTERNAL_SERVER_ERROR, details: error.message })
+    errorResponse = { ...errors.MONGO_SERVER_ERROR, details: error.message }
   }
+
+  return { statusCode, errorResponse }
 }
+
 
 const addComment = async (req, res) => {
   const { id: authorId, role: authorRole } = req.user
@@ -49,7 +53,8 @@ const addComment = async (req, res) => {
 
     res.status(201).json(response)
   } catch (error) {
-    handleError(error, res)
+    const { statusCode, errorResponse } = getErrorResponse(error)
+    res.status(statusCode).json(errorResponse)
   }
 }
 
@@ -60,9 +65,11 @@ const getComments = async (req, res) => {
     const comments = await commentService.getComments(cooperationId, req.user.id)
     res.status(200).json(comments)
   } catch (error) {
-    handleError(error, res)
+    const { statusCode, errorResponse } = getErrorResponse(error)
+    res.status(statusCode).json(errorResponse)
   }
 }
+
 
 module.exports = {
   addComment,
