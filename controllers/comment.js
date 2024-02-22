@@ -2,7 +2,6 @@ const commentService = require('~/services/comment')
 const Comment = require('~/models/comment')
 const errors = require('~/consts/errors')
 
-
 const getErrorResponse = (error) => {
   let errorResponse = { ...errors.INTERNAL_SERVER_ERROR, details: error.message }
   let statusCode = 403
@@ -15,7 +14,6 @@ const getErrorResponse = (error) => {
 
   return { statusCode, errorResponse }
 }
-
 
 const addComment = async (req, res) => {
   const { id: authorId, role: authorRole } = req.user
@@ -69,7 +67,6 @@ const getComments = async (req, res) => {
     res.status(statusCode).json(errorResponse)
   }
 }
-
 
 module.exports = {
   addComment,
