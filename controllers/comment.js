@@ -42,6 +42,7 @@ const addComment = async (req, res) => {
       author: {
         _id: populatedComment.author._id,
         firstName: populatedComment.author.firstName,
+
         lastName: populatedComment.author.lastName
       },
       cooperation: populatedComment.cooperation,
