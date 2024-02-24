@@ -22,7 +22,7 @@ const checkForLocalDB = async () => {
 
 const databaseInitialization = async () => {
   await mongoose.connect(MONGODB_URL)
-  await checkForLocalDB()
+  // await checkForLocalDB()
   logger.info('Connected to MongoDB.')
 }
 
