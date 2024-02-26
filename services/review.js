@@ -2,6 +2,7 @@ const Review = require('~/models/review')
 const calculateReviewStats = require('~/utils/reviews/reviewStatsAggregation')
 const filterAllowedFields = require('~/utils/filterAllowedFields')
 const { allowedReviewFieldsForUpdate } = require('~/validation/services/review')
+const { createForbiddenError } = require('~/utils/errorsHelper')
 
 const reviewService = {
   getReviews: async (match, skip, limit) => {
@@ -65,13 +66,22 @@ const reviewService = {
 
     const review = await Review.findById(id).exec()
 
+    if (!review || review.author.toString() !== currentUserId) {
+      throw createForbiddenError()
+    }
+
     for (const field in filteredUpdateData) {
       review[field] = filteredUpdateData[field]
     }
     await review.save()
   },
 
-  deleteReview: async (id) => {
+  deleteReview: async (id, currentUserId) => {
+    const review = await Review.findById(id).exec()
+
+    if (review.author.toString() !== currentUserId) {
+      throw createForbiddenError()
+    }
     await Review.findByIdAndRemove(id).exec()
   }
 }
