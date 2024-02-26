@@ -1,21 +1,22 @@
 const { Schema, model } = require('mongoose')
 const { OFFER, CATEGORY } = require('~/consts/models')
+const errors = require('~/consts/errors')
 
 const categorySchema = new Schema(
   {
     name: {
       type: String,
       unique: true,
-      required: [true, 'Category name is required']
+      required: [true, errors.FIELD_IS_NOT_DEFINED('Category name').message]
     },
     categoryIcon: {
       path: {
         type: String,
-        required: [true, 'Category icon path is required']
+        required: [true, errors.FIELD_IS_NOT_DEFINED('Category icon path').message]
       },
       color: {
         type: String,
-        required: [true, 'Color value is required']
+        required: [true, errors.FIELD_IS_NOT_DEFINED('Color value').message]
       }
     },
     totalOffers: {
