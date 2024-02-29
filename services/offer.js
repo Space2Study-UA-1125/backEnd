@@ -53,7 +53,7 @@ const offerService = {
   updateOffer: async (id, currentUserId, updateData) => {
     const filteredUpdateData = filterAllowedFields(updateData, allowedOfferFieldsForUpdate)
 
-    const offer = await Offer.findById(id)
+    const offer = await Offer.findById(id).exec()
 
     if (!offer || offer.author.toString() !== currentUserId) {
       throw createForbiddenError()
@@ -68,7 +68,7 @@ const offerService = {
   },
 
   deleteOffer: async (id, currentUserId) => {
-    const offer = await Offer.findById(id)
+    const offer = await Offer.findById(id).exec()
 
     if (offer.author.toString() !== currentUserId) {
       throw createForbiddenError()
