@@ -54,8 +54,6 @@ const offerService = {
     const filteredUpdateData = filterAllowedFields(updateData, allowedOfferFieldsForUpdate)
 
     const offer = await Offer.findById(id).exec()
-    console.log('Current User ID:', currentUserId)
-    console.log('Offer Author ID:', offer.author.toString())
 
     if (!offer || offer.author.toString() !== currentUserId) {
       throw createForbiddenError()
