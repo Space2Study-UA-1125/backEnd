@@ -44,10 +44,46 @@ const deleteOffer = async (req, res) => {
   res.status(204).end()
 }
 
+const getOffersByCategory = async (req, res, next) => {
+  try {
+    const categoryId = req.params.categoryId
+    const pipeline = offerAggregateOptions(req.query, { ...req.params, categoryId })
+    const offers = await offerService.getOffers(pipeline)
+    res.json(offers)
+  } catch (error) {
+    next(error)
+  }
+}
+
+const getOffersBySubject = async (req, res, next) => {
+  try {
+    const subjectId = req.params.subjectId
+    const pipeline = offerAggregateOptions(req.query, { ...req.params, subjectId })
+    const offers = await offerService.getOffers(pipeline)
+    res.json(offers)
+  } catch (error) {
+    next(error)
+  }
+}
+
+const getOffersByAuthor = async (req, res, next) => {
+  try {
+    const authorSearch = req.query.q
+    const pipeline = offerAggregateOptions({ search: authorSearch }, req.params)
+    const offers = await offerService.getOffers(pipeline)
+    res.json(offers)
+  } catch (error) {
+    next(error)
+  }
+}
+
 module.exports = {
   getOffers,
   getOfferById,
   createOffer,
   updateOffer,
-  deleteOffer
+  deleteOffer,
+  getOffersByCategory,
+  getOffersBySubject,
+  getOffersByAuthor
 }
