@@ -1,7 +1,8 @@
 const userService = require('~/services/user')
-const { createForbiddenError } = require('~/utils/errorsHelper')
+const { createForbiddenError, createError } = require('~/utils/errorsHelper')
+const { hashPassword, comparePasswords } = require('~/utils/passwordHelper')
 const createAggregateOptions = require('~/utils/users/createAggregateOptions')
-
+const { INCORRECT_CREDENTIALS } = require('~/consts/errors')
 const getUsers = async (req, res) => {
   const { skip, limit, sort, match } = createAggregateOptions(req.query)
 
@@ -26,7 +27,15 @@ const updateUser = async (req, res) => {
 
   if (id !== req.user.id) throw createForbiddenError()
 
-  await userService.updateUser(id, role, updateData)
+  if (updateData.password) {
+    const userById = await userService.getUserById(id)
+    const user = await userService.getUserByEmail(userById.email)
+
+    if (await comparePasswords(updateData.password, user.password)) throw createError(401, INCORRECT_CREDENTIALS)
+
+    const hashedPassword = await hashPassword(updateData.password)
+    await userService.privateUpdateUser(id, { password: hashedPassword })
+  } else await userService.updateUser(id, role, updateData)
 
   res.status(204).end()
 }

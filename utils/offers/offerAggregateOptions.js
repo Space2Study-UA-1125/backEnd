@@ -8,7 +8,9 @@ const offerAggregateOptions = (query, params) => {
     proficiencyLevel,
     rating,
     language,
-    search,
+    author,
+    category,
+    subject,
     languages,
     nativeLanguage,
     excludedOfferId,
@@ -17,23 +19,23 @@ const offerAggregateOptions = (query, params) => {
     skip = 0,
     limit = 5
   } = query
-  const { categoryId, subjectId, id: authorId } = params
+  const { id: authorId } = params
 
   const match = {}
 
-  if (search) {
-    const searchArray = search.trim().split(' ')
+  if (author) {
+    const searchArray = author.trim().split(' ')
     const firstNameRegex = getRegex(searchArray[0])
     const lastNameRegex = getRegex(searchArray[1])
 
     const additionalFields = authorId
-      ? [{ 'subject.name': getRegex(search) }]
+      ? [{ 'subject.name': getRegex(author) }]
       : [
           { 'author.firstName': firstNameRegex, 'author.lastName': lastNameRegex },
           { 'author.firstName': lastNameRegex, 'author.lastName': firstNameRegex }
         ]
 
-    match['$or'] = [{ title: getRegex(search) }, ...additionalFields]
+    match['$or'] = [{ title: getRegex(author) }, ...additionalFields]
   }
 
   if (authorId) {
@@ -73,12 +75,12 @@ const offerAggregateOptions = (query, params) => {
     match['author.nativeLanguage'] = getRegex(nativeLanguage)
   }
 
-  if (categoryId) {
-    match['category._id'] = mongoose.Types.ObjectId(categoryId)
+  if (category) {
+    match['category._id'] = mongoose.Types.ObjectId(category)
   }
 
-  if (subjectId) {
-    match['subject._id'] = mongoose.Types.ObjectId(subjectId)
+  if (subject) {
+    match['subject._id'] = mongoose.Types.ObjectId(subject)
   }
 
   if (excludedOfferId) {

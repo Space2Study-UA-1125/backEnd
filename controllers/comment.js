@@ -1,22 +1,72 @@
 const commentService = require('~/services/comment')
+const Comment = require('~/models/comment')
+const errors = require('~/consts/errors')
+
+const getErrorResponse = (error) => {
+  let errorResponse = { ...errors.INTERNAL_SERVER_ERROR, details: error.message }
+  let statusCode = 403
+
+  if (error.name === 'ValidationError') {
+    errorResponse = { ...errors.VALIDATION_ERROR, details: error.message }
+  } else if (error.name === 'MongoServerError') {
+    errorResponse = { ...errors.MONGO_SERVER_ERROR, details: error.message }
+  }
+
+  return { statusCode, errorResponse }
+}
 
 const addComment = async (req, res) => {
-  const { id: author, role: authorRole } = req.user
-  const data = req.body
+  const { id: authorId, role: authorRole } = req.user
+  const { text } = req.body
   const { id: cooperationId } = req.params
 
-  const comment = await commentService.addComment({ text: data.text, author, authorRole, cooperationId })
+  try {
+    const comment = await commentService.addComment({
+      text,
+      author: authorId,
+      authorRole,
+      cooperationId
+    })
+    const populatedComment = await Comment.findById(comment._id).populate({
+      path: 'author',
+      select: 'firstName lastName'
+    })
 
-  res.status(201).json(comment)
+    if (!populatedComment.author) {
+      return res.status(404).json(errors.USER_NOT_FOUND)
+    }
+
+    const response = {
+      _id: populatedComment._id,
+      text: populatedComment.text,
+      author: {
+        _id: populatedComment.author._id,
+        firstName: populatedComment.author.firstName,
+
+        lastName: populatedComment.author.lastName
+      },
+      cooperation: populatedComment.cooperation,
+      createdAt: populatedComment.createdAt,
+      updatedAt: populatedComment.updatedAt
+    }
+
+    res.status(201).json(response)
+  } catch (error) {
+    const { statusCode, errorResponse } = getErrorResponse(error)
+    res.status(statusCode).json(errorResponse)
+  }
 }
 
 const getComments = async (req, res) => {
-  const { id } = req.user
   const { id: cooperationId } = req.params
 
-  const comments = await commentService.getComments(cooperationId, id)
-
-  res.status(200).json(comments)
+  try {
+    const comments = await commentService.getComments(cooperationId, req.user.id)
+    res.status(200).json(comments)
+  } catch (error) {
+    const { statusCode, errorResponse } = getErrorResponse(error)
+    res.status(statusCode).json(errorResponse)
+  }
 }
 
 module.exports = {
