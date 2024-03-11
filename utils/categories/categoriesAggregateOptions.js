@@ -19,7 +19,14 @@ const categoriesAggregateOptions = (query) => {
       }
     },
     {
-      $sort: { totalOffers: -1, updatedAt: -1 }
+      $addFields: {
+        totalOffersCombined: {
+          $sum: ['$totalOffers.student', '$totalOffers.tutor']
+        }
+      }
+    },
+    {
+      $sort: { totalOffersCombined: -1, updatedAt: -1 }
     },
     {
       $skip: parseInt(skip)
