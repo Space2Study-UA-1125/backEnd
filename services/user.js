@@ -1,6 +1,4 @@
 const User = require('~/models/user')
-const uploadService = require('~/services/upload')
-const { USER } = require('~/consts/upload')
 const { hashPassword } = require('~/utils/passwordHelper')
 const { createError } = require('~/utils/errorsHelper')
 
@@ -83,15 +81,6 @@ const userService = {
     const filteredUpdateData = filterAllowedFields(updateData, allowedUserFieldsForUpdate)
 
     const user = await User.findById(id).lean().exec()
-
-    if (user.photo) {
-      await uploadService.deleteFile(user.photo, USER)
-    }
-
-    if (updateData.photo) {
-      const photoUrl = await uploadService.uploadFile(updateData.photo, USER)
-      filteredUpdateData.photo = photoUrl
-    }
 
     filteredUpdateData.mainSubjects = { ...user.mainSubjects, [role]: updateData.mainSubjects }
 
