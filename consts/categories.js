@@ -73,6 +73,26 @@ const categories = {
     _id: '64884fe3fdc2d1a130c24adc',
     name: 'Psychology',
     appearance: { path: 'mocked-path-to-icon', color: '#66C42C' }
+  },
+  ART: {
+    _id: '65e84054a86f0fbf7adecc44',
+    name: 'Art',
+    appearance: { path: 'mocked-path-to-icon', color: '#66C42C' }
+  },
+  ECONOMICS: {
+    _id: '65e84063a86f0fbf7adecc46',
+    name: 'Economics',
+    appearance: { path: 'mocked-path-to-icon', color: '#66C42C' }
+  },
+  DARK_ARTS: {
+    _id: '65e84080a86f0fbf7adecc48',
+    name: 'Dark Arts',
+    appearance: { path: 'mocked-path-to-icon', color: '#66C42C' }
+  },
+  DARC_MAGIC: {
+    _id: '65e9c15ccfd82d656917e438',
+    name: 'Dark magic',
+    appearance: { path: 'mocked-path-to-icon', color: '#66C42C' }
   }
 }
 
