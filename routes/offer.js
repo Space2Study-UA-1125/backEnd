@@ -26,4 +26,8 @@ router.get('/:id', isEntityValid({ params }), asyncWrapper(offerController.getOf
 router.patch('/:id', isEntityValid({ params }), asyncWrapper(offerController.updateOffer))
 router.delete('/:id', isEntityValid({ params }), asyncWrapper(offerController.deleteOffer))
 
+router.get('/category/:categoryId', asyncWrapper(offerController.getOffersByCategory))
+router.get('/subject/:subjectId', asyncWrapper(offerController.getOffersBySubject))
+router.get('/author/search', asyncWrapper(offerController.getOffersByAuthor))
+
 module.exports = router
