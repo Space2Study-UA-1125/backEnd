@@ -9,7 +9,6 @@ const offerAggregateOptions = (query, params) => {
     rating,
     language,
     author,
-    category,
     subject,
     languages,
     nativeLanguage,
@@ -19,7 +18,7 @@ const offerAggregateOptions = (query, params) => {
     skip = 0,
     limit = 5
   } = query
-  const { id: authorId } = params
+  const { categoryName, subjectId, id: authorId } = params
 
   const match = {}
 
@@ -31,9 +30,9 @@ const offerAggregateOptions = (query, params) => {
     const additionalFields = authorId
       ? [{ 'subject.name': getRegex(author) }]
       : [
-          { 'author.firstName': firstNameRegex, 'author.lastName': lastNameRegex },
-          { 'author.firstName': lastNameRegex, 'author.lastName': firstNameRegex }
-        ]
+        { 'author.firstName': firstNameRegex, 'author.lastName': lastNameRegex },
+        { 'author.firstName': lastNameRegex, 'author.lastName': firstNameRegex }
+      ]
 
     match['$or'] = [{ title: getRegex(author) }, ...additionalFields]
   }
@@ -75,12 +74,16 @@ const offerAggregateOptions = (query, params) => {
     match['author.nativeLanguage'] = getRegex(nativeLanguage)
   }
 
-  if (category) {
-    match['category._id'] = mongoose.Types.ObjectId(category)
+  if (categoryName) {
+    match['category.name'] = getRegex(categoryName)
   }
 
   if (subject) {
     match['subject._id'] = mongoose.Types.ObjectId(subject)
+  }
+
+  if (subjectId) {
+    match['subject._id'] = mongoose.Types.ObjectId(subjectId)
   }
 
   if (excludedOfferId) {
@@ -156,7 +159,7 @@ const offerAggregateOptions = (query, params) => {
         pipeline: [
           {
             $project: {
-              appearance: 1
+              name: 1
             }
           }
         ],
